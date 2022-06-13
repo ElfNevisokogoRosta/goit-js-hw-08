@@ -1,7 +1,8 @@
+// Add imports above this line
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
-import { galleryItems } from './gallery-items.js';
-import galleryItemsEl from '../tamplates/gallery-items.hbs';
+import { galleryItems } from './gallery-items';
+
 // Change code below this line
 const imgGallery = document.querySelector('.gallery');
 const listImages = galleryItems
@@ -23,3 +24,4 @@ const lightbox = new SimpleLightbox('.gallery a', {
     captionDelay: 250,
     enableKeyboard: true,
     });
+console.log(galleryItems);
