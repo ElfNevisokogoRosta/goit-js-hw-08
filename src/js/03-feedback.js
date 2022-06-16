@@ -25,6 +25,11 @@ el.textarea.addEventListener('input', throttle(onTextareaInput, 500));
 
 
 function onFormSubmit(event) {
+    const user ={
+        email: el.input.value,
+        message: el.textarea.value
+    };
+    console.log(user);
     event.preventDefault();
     event.target.reset();
     localStorage.removeItem(STORAGE_KEY);
