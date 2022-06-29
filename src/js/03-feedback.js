@@ -2,45 +2,37 @@ import throttle from 'lodash.throttle';
 
 const STORAGE_KEY = 'feedback-form-state';
 
-let formData = JSON.parse(localStorage.getItem(STORAGE_KEY));
-if (formData === null) {
-    formData = {
-        email: "",
-        message: "",
-    };
+const form = document.querySelector('form.feedback-form');
+const emailInput = document.querySelector('input[name="email"]');
+const textarea = document.querySelector('textarea[name="message"]');
+
+form.addEventListener('input', throttle(onFormInput, 500));
+form.addEventListener('submit', onFormSubmit);
+
+function onFormInput() {
+  const formData = { email: emailInput.value, message: textarea.value, }
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
 }
-
-const el = {
-form: document.querySelector('.feedback-form'),
-input: document.querySelector('.feedback-form input'),
-textarea: document.querySelector('.feedback-form textarea')
-};
-
-el.input.value = formData.email;
-el.textarea.value = formData.message;
-
-el.form.addEventListener('submit', onFormSubmit);
-el.input.addEventListener('input', throttle(onEmailInput, 500));
-el.textarea.addEventListener('input', throttle(onTextareaInput, 500));
-
 
 function onFormSubmit(event) {
-    const user ={
-        email: el.input.value,
-        message: el.textarea.value
-    };
-    console.log(user);
-    event.preventDefault();
-    event.target.reset();
+  event.preventDefault();
+
+  if (emailInput.value.trim() === "" || textarea.value.trim() === "") {
+    alert('Please fill in all input fields.');
+    return;
+  } else {
+    const formData = { email: emailInput.value, message: textarea.value, }
+    console.log(formData);
+    form.reset();
     localStorage.removeItem(STORAGE_KEY);
+  }
 }
 
-function onEmailInput(event) {
-    formData.email = event.target.value;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+function onPageReload() {
+  const savedMessage = JSON.parse(localStorage.getItem(STORAGE_KEY));
+  if (savedMessage) {
+    emailInput.value = savedMessage.email;
+    textarea.value = savedMessage.message;
+  }
 }
-
-function onTextareaInput(event) {
-    formData.message = event.target.value;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
-}
+onPageReload();
